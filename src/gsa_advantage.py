@@ -5,6 +5,15 @@ import requests
 from bs4 import BeautifulSoup
 
 
+# Set some other things, like the login url for GSA Advantage
+root_url = "https://www.gsaadvantage.gov"
+login_url = "%s/advantage/main/login.do" % root_url
+login_post_url = "%s/advantage/main/login_in.do" % root_url
+retrieve_cart_url = "%s/advantage/parkcart/retrieve_parkcart.do" % root_url
+# cartNum=XXX must be added to this
+retrieve_cart_details_url = "%s/advantage/parkcart/addToCart.do" % root_url
+
+
 def parse_detail_rows(detail_rows):
   parsed_rows = []
   i = 0
@@ -52,36 +61,6 @@ def token_get(s):
   token_tag = soup.find('input', attrs={'name':'org.apache.struts.taglib.html.TOKEN', 'type':'hidden'})
   return token_tag['value']
 
-# A URL like this appears to retrieve a cart in a way in which details can be done:
-# https://www.gsaadvantage.gov/advantage/parkcart/addToCart.do?cartNum=2865618
-# Temporarily Get User Credentials, you'll probably want to pass these some other way
-if ('GSAAdvantage_userName' in os.environ):
-  GSAAdvantage_userName = os.environ['GSAAdvantage_userName']
-else:
-  GSAAdvantage_userName = raw_input("Enter GSA Advantage Username: ")
-
-
-if ('GSAAdvantage_password' in os.environ):
-  GSAAdvantage_password = os.environ['GSAAdvantage_password']
-else:
-  GSAAdvantage_password = getpass.getpass("Enter GSA Advantage Password: ")
-
-
-if ('GSAAdvantage_cartNumb' in os.environ):
-  GSAAdvantage_cartNumb = os.environ['GSAAdvantage_cartNumb']
-else:
-  GSAAdvantage_cartNumb = raw_input("Enter the Cart Number you wish to display: ")
-
-# Set some other things, like the login url for GSA Advantage
-root_url = "https://www.gsaadvantage.gov"
-login_url = "%s/advantage/main/login.do" % root_url
-login_post_url = "%s/advantage/main/login_in.do" % root_url
-retrieve_cart_url = "%s/advantage/parkcart/retrieve_parkcart.do" % root_url
-# cartNum=XXX must be added to this
-retrieve_cart_details_url = "%s/advantage/parkcart/addToCart.do" % root_url
-
-# Give the user some peace of mind
-print "Looking for your record! (usually for about 4 seconds.)"
 
 # Return the cart as an array of dictionaries
 def getCart(GSAAdvantage_userName,GSAAdvantage_password,GSAAdvantage_cartNumb):
@@ -131,9 +110,3 @@ def getCart(GSAAdvantage_userName,GSAAdvantage_password,GSAAdvantage_cartNumb):
   product_rows = product_table[1:]
   analyzed_rows = add_url_from_product_table(analyzed_rows,product_rows)
   return analyzed_rows
-
-cart = getCart(GSAAdvantage_userName,GSAAdvantage_password,GSAAdvantage_cartNumb)
-print json.dumps(cart,indent=4,sort_keys=True)
-
-
-

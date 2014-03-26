@@ -30,4 +30,7 @@ is generally easy to do!
 - `python gsa-advantage.py`
 
 ## Other Usage
-You can obviously modify this to be included in a program rather than using it on the command line ;)
+
+I am currently building this as a web-service.
+
+To test, you can run "python gsa-advantage-py".

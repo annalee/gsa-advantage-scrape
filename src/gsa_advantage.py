@@ -3,6 +3,8 @@ import json
 import os
 import requests
 from bs4 import BeautifulSoup
+import logging
+logging.basicConfig(filename='scraper.log',level=logging.ERROR)
 
 
 # Set some other things, like the login url for GSA Advantage
@@ -64,6 +66,10 @@ def token_get(s):
 
 # Return the cart as an array of dictionaries
 def getCart(GSAAdvantage_userName,GSAAdvantage_password,GSAAdvantage_cartNumb):
+  logging.debug('username '+GSAAdvantage_userName)
+  logging.debug('password '+GSAAdvantage_password)
+  logging.debug('cartNumb '+GSAAdvantage_cartNumb)
+  
   # We'll use requests to login and get to the cart page
   s = requests.Session()
 

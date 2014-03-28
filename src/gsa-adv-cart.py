@@ -20,6 +20,9 @@ print "Content-type: application/json"
 print 
 response = gsa_advantage.getCart(gsa_adv_u,gsa_adv_p,gsa_adv_cart_id)
 d = json.JSONEncoder().encode((response))
-print callback+'(' + d + ');'
+if (callback):
+    print callback+'(' + d + ');'
+else:
+    print d
 
 

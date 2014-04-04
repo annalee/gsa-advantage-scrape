@@ -29,7 +29,7 @@ def actLikeACommandLineProgram():
 # Give the user some peace of mind
   print "Looking for your record! (usually for about 4 seconds.)"
 
-  cart = getCart(GSAAdvantage_userName,GSAAdvantage_password,GSAAdvantage_cartNumb)
+  cart = gsa_advantage.getCart(GSAAdvantage_userName,GSAAdvantage_password,GSAAdvantage_cartNumb)
   print json.dumps(cart,indent=4,sort_keys=True)
 
 if __name__ == "__main__":

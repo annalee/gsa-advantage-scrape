@@ -4,6 +4,7 @@ import os
 import requests
 from bs4 import BeautifulSoup
 import logging
+import re
 logging.basicConfig(filename='scraper.log',level=logging.ERROR)
 
 
@@ -46,6 +47,7 @@ def parse_detail_rows(detail_rows):
 
 def add_url_from_product_table(analyzed_rows,product_rows):
   i = 0
+
   for row in analyzed_rows:
     prow = product_rows[i]
     product_url = prow.find('a')['href']
@@ -62,6 +64,59 @@ def token_get(s):
   #print soup.title
   token_tag = soup.find('input', attrs={'name':'org.apache.struts.taglib.html.TOKEN', 'type':'hidden'})
   return token_tag['value']
+
+def find_checked_row(items):
+# This is a little tricky...we need to figure out how to find the one checked value.
+  i = 0
+  for item in items:
+    checked = item.find('input', attrs={'checked':'checked'})
+    if (checked is not None):
+      return item
+    i = i + 1
+
+  print "Whoops, didn't find a checked value, probably a giant problem!"
+  raise Error("Couldn't find the checked Item!");
+
+def map_features(features):
+  map_f = []
+  pattern = r'.*/(\w+).gif'
+  for f in features:
+    m = re.match(pattern, repr(f))
+    if (m):
+      map_f.append(m.groups()[0])
+  return map_f
+
+
+def addIndividualItem(s,row):
+  item_page = s.get(root_url+row['url']).text
+  soup = BeautifulSoup(item_page)
+  item_table = soup.find('table', attrs={'class':'greybox'}).find_all('tr')
+  checked_row = find_checked_row(item_table)
+
+  tds = checked_row.find_all('td')
+  i = 0
+  for itd in tds:
+    i = i+1
+
+  features = tds[6].find_all('img')
+  abstract_features = map_features(features)
+
+  socio = tds[10]
+  anchors = socio.find_all("a")
+  j = 0
+  socio_agg = ""
+  for ans in anchors:
+    socio_agg = ans.getText() + socio_agg
+    j = j + 1
+
+  green = tds[13].getText()
+
+  if (green == u'\xa0'):
+    green = ""
+
+  row['green'] = green
+  row['socio'] = socio_agg
+  row['features'] = repr(abstract_features)
 
 
 # Return the cart as an array of dictionaries
@@ -115,4 +170,8 @@ def getCart(GSAAdvantage_userName,GSAAdvantage_password,GSAAdvantage_cartNumb):
   analyzed_rows = parse_detail_rows(detail_rows)
   product_rows = product_table[1:]
   analyzed_rows = add_url_from_product_table(analyzed_rows,product_rows)
+
+  for row in analyzed_rows:
+    addIndividualItem(s,row)
+    
   return analyzed_rows

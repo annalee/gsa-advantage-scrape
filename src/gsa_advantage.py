@@ -15,6 +15,7 @@ login_post_url = "%s/advantage/main/login_in.do" % root_url
 retrieve_cart_url = "%s/advantage/parkcart/retrieve_parkcart.do" % root_url
 # cartNum=XXX must be added to this
 retrieve_cart_details_url = "%s/advantage/parkcart/addToCart.do" % root_url
+parked_url = "%s/advantage/parkcart/my_parkcart.do" % root_url
 
 
 def parse_detail_rows(detail_rows):
@@ -88,7 +89,12 @@ def map_features(features):
 
 
 def addIndividualItem(s,row):
-  item_page = s.get(root_url+row['url']).text
+  try:
+    item_page = s.get(root_url+row['url']).text
+  except IOError as e:
+    row["error"] = "There was an error on this row: "+repr(e.strerror)
+    return
+
   soup = BeautifulSoup(item_page)
   item_table = soup.find('table', attrs={'class':'greybox'}).find_all('tr')
   checked_row = find_checked_row(item_table)
@@ -104,9 +110,9 @@ def addIndividualItem(s,row):
   socio = tds[10]
   anchors = socio.find_all("a")
   j = 0
-  socio_agg = ""
+  socio_agg = []
   for ans in anchors:
-    socio_agg = ans.getText() + socio_agg
+    socio_agg.append(ans.getText())
     j = j + 1
 
   green = tds[13].getText()
@@ -116,7 +122,21 @@ def addIndividualItem(s,row):
 
   row['green'] = green
   row['socio'] = socio_agg
-  row['features'] = repr(abstract_features)
+  row['features'] = abstract_features
+
+
+def find_cart_name_from_number(parked,GSAAdvantage_cartNumb):
+  soup = BeautifulSoup(parked)
+# This is very fragile, we want the first one, but there is another that matches!
+  all_carts = soup.find('table', attrs={'class':'greybox'}).find_all('tr')
+  for cartrow in all_carts[1:]:
+    cols = cartrow.find_all('td')
+    # This should be contains!
+    if (cols[1].getText() == GSAAdvantage_cartNumb):
+      return cols[2].getText()
+  return None
+    
+
 
 
 # Return the cart as an array of dictionaries
@@ -141,7 +161,12 @@ def getCart(GSAAdvantage_userName,GSAAdvantage_password,GSAAdvantage_cartNumb):
   
   # We'll login now
   s.post(login_post_url, data=login_payload)
-  
+
+  # Now we need to get the cart name from the parked cart page---an API will make this much better.
+  parked = s.get(parked_url).text
+
+  cart_name = find_cart_name_from_number(parked,GSAAdvantage_cartNumb)
+
   # We'll now get the content of the cart
   cart_payload = {
     'cartNumber': GSAAdvantage_cartNumb,
@@ -171,7 +196,13 @@ def getCart(GSAAdvantage_userName,GSAAdvantage_password,GSAAdvantage_cartNumb):
   product_rows = product_table[1:]
   analyzed_rows = add_url_from_product_table(analyzed_rows,product_rows)
 
+
   for row in analyzed_rows:
     addIndividualItem(s,row)
+
+# this doesn't belong on every row, but it will do. We could reorganize the API
+# to handle multiple 
+  for row in analyzed_rows:
+    row["cartName"] = cart_name
     
   return analyzed_rows

@@ -10,13 +10,13 @@ def actLikeACommandLineProgram():
   # A URL like this appears to retrieve a cart in a way in which details can be done:
   # https://www.gsaadvantage.gov/advantage/parkcart/addToCart.do?cartNum=2865618
   # Temporarily Get User Credentials, you'll probably want to pass these some other way
-  if ('GSAAdvantage_userName' in os.environ):
-    GSAAdvantage_userName = os.environ['GSAAdvantage_userName']
+  if ('GSA_USERNAME' in os.environ):
+    GSAAdvantage_userName = os.environ['GSA_USERNAME']
   else:
     GSAAdvantage_userName = raw_input("Enter GSA Advantage Username: ")
 
-  if ('GSAAdvantage_password' in os.environ):
-    GSAAdvantage_password = os.environ['GSAAdvantage_password']
+  if ('GSA_PASSWORD' in os.environ):
+    GSAAdvantage_password = os.environ['GSA_PASSWORD']
   else:
     GSAAdvantage_password = getpass.getpass("Enter GSA Advantage Password: ")
 

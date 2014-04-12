@@ -93,6 +93,7 @@ def addIndividualItem(s,row):
     item_page = s.get(root_url+row['url']).text
   except IOError as e:
     row["error"] = "There was an error on this row: "+repr(e.strerror)
+    logging.debug('Encountered error in addIndividualItem'+repr(e))
     return
 
   soup = BeautifulSoup(item_page)
@@ -200,8 +201,9 @@ def getCart(GSAAdvantage_userName,GSAAdvantage_password,GSAAdvantage_cartNumb):
   product_rows = product_table[1:]
   analyzed_rows = add_url_from_product_table(analyzed_rows,product_rows)
 
-
+  logging.debug('Found cart with '+repr(len(analyzed_rows)) + " items.")
   for row in analyzed_rows:
+    logging.debug('scraping row...')
     addIndividualItem(s,row)
 
   cart = {

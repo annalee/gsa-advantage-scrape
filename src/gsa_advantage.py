@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import logging
 import re
-logging.basicConfig(filename='scraper.log',level=logging.ERROR)
+logging.basicConfig(filename='scraper.log',level=logging.DEBUG)
 
 
 # Set some other things, like the login url for GSA Advantage
@@ -134,6 +134,9 @@ def find_cart_name_from_number(parked,GSAAdvantage_cartNumb):
     # This should be contains!
     if (cols[1].getText() == GSAAdvantage_cartNumb):
       return cols[2].getText()
+
+  logging.debug('could not find a name')
+  logging.debug(repr(all_carts))
   return None
     
 
@@ -142,7 +145,6 @@ def find_cart_name_from_number(parked,GSAAdvantage_cartNumb):
 # Return the cart as an array of dictionaries
 def getCart(GSAAdvantage_userName,GSAAdvantage_password,GSAAdvantage_cartNumb):
   logging.debug('username '+GSAAdvantage_userName)
-  logging.debug('password '+GSAAdvantage_password)
   logging.debug('cartNumb '+GSAAdvantage_cartNumb)
   
   # We'll use requests to login and get to the cart page
@@ -165,7 +167,9 @@ def getCart(GSAAdvantage_userName,GSAAdvantage_password,GSAAdvantage_cartNumb):
   # Now we need to get the cart name from the parked cart page---an API will make this much better.
   parked = s.get(parked_url).text
 
-  cart_name = find_cart_name_from_number(parked,GSAAdvantage_cartNumb)
+  # This basically doesn't work, so I am removing it, but it makes sense to have it in the JSON...
+#  cart_name = find_cart_name_from_number(parked,GSAAdvantage_cartNumb)
+  cart_name = None
 
   # We'll now get the content of the cart
   cart_payload = {
@@ -200,9 +204,9 @@ def getCart(GSAAdvantage_userName,GSAAdvantage_password,GSAAdvantage_cartNumb):
   for row in analyzed_rows:
     addIndividualItem(s,row)
 
-# this doesn't belong on every row, but it will do. We could reorganize the API
-# to handle multiple 
-  for row in analyzed_rows:
-    row["cartName"] = cart_name
-    
-  return analyzed_rows
+  cart = {
+    "cartName": cart_name,
+    "cartNumber": GSAAdvantage_cartNumb,
+    "cartItems": analyzed_rows
+  }
+  return cart

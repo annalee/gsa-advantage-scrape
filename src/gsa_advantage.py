@@ -96,34 +96,46 @@ def addIndividualItem(s,row):
     logging.debug('Encountered error in addIndividualItem'+repr(e))
     return
 
-  soup = BeautifulSoup(item_page)
-  item_table = soup.find('table', attrs={'class':'greybox'}).find_all('tr')
-  checked_row = find_checked_row(item_table)
+  try:
+    soup = BeautifulSoup(item_page)
+    item_table = soup.find('table', attrs={'class':'greybox'}).find_all('tr')
+    checked_row = find_checked_row(item_table)
 
-  tds = checked_row.find_all('td')
-  i = 0
-  for itd in tds:
-    i = i+1
+    tds = checked_row.find_all('td')
 
-  features = tds[6].find_all('img')
-  abstract_features = map_features(features)
+    i = 0
+    for itd in tds:
+      i = i+1
 
-  socio = tds[10]
-  anchors = socio.find_all("a")
-  j = 0
-  socio_agg = []
-  for ans in anchors:
-    socio_agg.append(ans.getText())
-    j = j + 1
+    features = tds[6].find_all('img')
+    abstract_features = map_features(features)
 
-  green = tds[13].getText()
+    socio = tds[10]
+    anchors = socio.find_all("a")
+    j = 0
+    socio_agg = []
+    for ans in anchors:
+      socio_agg.append(ans.getText())
+      j = j + 1
 
-  if (green == u'\xa0'):
-    green = ""
+    green = tds[13].getText()
 
-  row['green'] = green
-  row['socio'] = socio_agg
-  row['features'] = abstract_features
+    if (green == u'\xa0'):
+      green = ""
+
+    row['green'] = green
+    row['socio'] = socio_agg
+    row['features'] = abstract_features
+  except:
+    # One of the ways this can occur is if the object 
+    # comes from GSA Supply, which uses a completely different
+    # page, in which the notes don't seem to be available.
+    row['na'] = 'na'
+    print "XXXXX"
+    print item_page
+    print "XXXXX"
+    print row['url']
+
 
 
 def find_cart_name_from_number(parked,GSAAdvantage_cartNumb):
@@ -202,9 +214,10 @@ def getCart(GSAAdvantage_userName,GSAAdvantage_password,GSAAdvantage_cartNumb):
   analyzed_rows = add_url_from_product_table(analyzed_rows,product_rows)
 
   logging.debug('Found cart with '+repr(len(analyzed_rows)) + " items.")
+  n = 0
   for row in analyzed_rows:
-    logging.debug('scraping row...')
-    addIndividualItem(s,row)
+    if (row['vendor'] != 'GSA'):
+      addIndividualItem(s,row)
 
   cart = {
     "cartName": cart_name,

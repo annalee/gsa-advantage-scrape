@@ -23,17 +23,60 @@ is generally easy to do!
 - `requests`
 - `beautifulsoup4`
 
-
 ## Installation
 
+Many people prefer to install python modules with VirtualEnv.  If you
+choose to do this, perform within the src directory:
+
+mkvirtualenv gsa_adv_scraper
+pip install -r ../requirements.txt 
+
+If you don't care to use it, then  simply execute:
+
 - `pip install -r requirements.txt`
-- `python gsa-advantage.py`
+
+In the main effect.
 
 ## Other Usage
 
-I am currently building this as a web-service.
+To make this useful, we support both a command-line usage and a CGI
+usage.
 
-To test, you can run "python gsa-advantage-py".
+The command line usage is simple:
+
+python gsa-scrape-commandline.py
+
+However, we normally used this a web-service API, and therefore host
+it with Apache.  Although there are many ways to do this, I prefer to
+do it as a virtual host.  This requires two steps:  Adding an entry to
+/etc/hosts file and adding a VirtualHost entry to your apche
+configuration.
+
+The example configuration looks like this:
+
+<VirtualHost gsa-advantage-scraper:80>
+    ServerName gsa-advantage-scraper
+    ScriptAlias /cgi-bin/ /Users/robertread/projects/gsa-advantage-scrape/src/ \
+
+      DocumentRoot /Users/robertread/projects/gsa-advantage-scrape/src
+       <Directory "/Users/robertread/projects/gsa-advantage-scrape/src">
+            Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+            Order allow,deny
+            AllowOverride None
+            Allow from all
+            DirectoryIndex index.php
+            AddHandler cgi-script .py .cgi
+      </Directory>
+</VirtualHost>
+
+Depending on whether have used the "VirtualEnv" installation method
+above or have installed your python packages where they can be reached
+without VirtualEnv, you should access gsa-adv-cart-ve.py or
+gsa-adv-cart.py.
+
+
+
+
 
 ### Public domain
 

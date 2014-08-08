@@ -28,8 +28,9 @@ is generally easy to do!
 Many people prefer to install python modules with VirtualEnv.  If you
 choose to do this, perform within the src directory:
 
-virtualenv gsascraper
-pip install -r ../requirements.txt 
+```virtualenv gsascraper
+pip install -r ../requirements.txt
+```
 
 If you don't care to use it, then  simply execute:
 
@@ -44,7 +45,9 @@ usage.
 
 The command line usage is simple:
 
+```
 python gsa-scrape-commandline.py
+```
 
 However, we normally used this a web-service API, and therefore host
 it with Apache.  Although there are many ways to do this, I prefer to
@@ -53,7 +56,7 @@ do it as a virtual host.  This requires two steps:  Adding an entry to
 configuration.
 
 The example configuration looks like this:
-
+```
 <VirtualHost gsa-advantage-scraper:80>
     ServerName gsa-advantage-scraper
     ScriptAlias /cgi-bin/ /Users/robertread/projects/gsa-advantage-scrape/src/ \
@@ -68,6 +71,7 @@ The example configuration looks like this:
             AddHandler cgi-script .py .cgi
       </Directory>
 </VirtualHost>
+```
 
 Depending on whether have used the "VirtualEnv" installation method
 above or have installed your python packages where they can be reached

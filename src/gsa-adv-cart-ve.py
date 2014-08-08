@@ -1,5 +1,5 @@
 #!/bin/bash
-source gsa-adv-scraper/bin/activate
-python gsa-adv-cart-ve.py
+source "gsascraper/bin/activate"
+python gsa-adv-cart.py
 
 

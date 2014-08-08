@@ -28,7 +28,8 @@ is generally easy to do!
 Many people prefer to install python modules with VirtualEnv.  If you
 choose to do this, perform within the src directory:
 
-```virtualenv gsascraper
+```
+virtualenv gsascraper
 pip install -r ../requirements.txt
 ```
 
@@ -56,6 +57,7 @@ do it as a virtual host.  This requires two steps:  Adding an entry to
 configuration.
 
 The example configuration looks like this:
+
 ```
 <VirtualHost gsa-advantage-scraper:80>
     ServerName gsa-advantage-scraper

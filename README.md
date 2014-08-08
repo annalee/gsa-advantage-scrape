@@ -28,7 +28,7 @@ is generally easy to do!
 Many people prefer to install python modules with VirtualEnv.  If you
 choose to do this, perform within the src directory:
 
-mkvirtualenv gsa_adv_scraper
+virtualenv gsascraper
 pip install -r ../requirements.txt 
 
 If you don't care to use it, then  simply execute:
@@ -73,10 +73,6 @@ Depending on whether have used the "VirtualEnv" installation method
 above or have installed your python packages where they can be reached
 without VirtualEnv, you should access gsa-adv-cart-ve.py or
 gsa-adv-cart.py.
-
-
-
-
 
 ### Public domain
 

@@ -77,8 +77,11 @@ The example configuration looks like this:
 
 Depending on whether have used the "VirtualEnv" installation method
 above or have installed your python packages where they can be reached
-without VirtualEnv, you should access gsa-adv-cart-ve.py or
-gsa-adv-cart.py.
+without VirtualEnv, you should access `gsa-adv-cart-ve.py` or
+`gsa-adv-cart.py`.
+
+The most common usage of this project is to serve as an API used by
+the project [Mario](https://github.com/18F/Mario]) but you of course may use it as you see fit.
 
 ### Public domain
 

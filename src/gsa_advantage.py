@@ -5,7 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import logging
 import re
-logging.basicConfig(filename='scraper.log',level=logging.DEBUG)
+#logging.basicConfig(filename='scraper.log',level=logging.DEBUG)
 
 
 # Set some other things, like the login url for GSA Advantage
@@ -54,7 +54,7 @@ def add_url_from_product_table(analyzed_rows,product_rows):
     product_url = prow.find('a')['href']
 
     # We'll just print out some info here
-    row['url'] = product_url
+    row['url'] = 'https://gsaadvantage.gov' + product_url
     i = i + 1
   return analyzed_rows
 
@@ -179,6 +179,8 @@ def getCart(GSAAdvantage_userName,GSAAdvantage_password,GSAAdvantage_cartNumb):
 
   # Now we need to get the cart name from the parked cart page---an API will make this much better.
   parked = s.get(parked_url).text
+
+ # print parked
 
   # This basically doesn't work, so I am removing it, but it makes sense to have it in the JSON...
 #  cart_name = find_cart_name_from_number(parked,GSAAdvantage_cartNumb)

@@ -90,7 +90,7 @@ def map_features(features):
 
 def addIndividualItem(s,row):
   try:
-    item_page = s.get(root_url+row['url']).text
+    item_page = s.get(row['url']).text
   except IOError as e:
     row["error"] = "There was an error on this row: "+repr(e.strerror)
     logging.debug('Encountered error in addIndividualItem'+repr(e))

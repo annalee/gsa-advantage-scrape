@@ -102,7 +102,7 @@ To make the API available via a Flask app, run:
 python src/server.py
 ```
 
-then do requests to http://127.0.0.1:5000/carts/CART_ID?u=USER&p=PASSWORD. Note this endpoint supports JSONP via a `callback` parameter.
+then do requests to http://127.0.0.1:5000/api/v1/carts/CART_ID?u=USER&p=PASSWORD. Note this endpoint supports JSONP via a `callback` parameter.
 
 ### Note
 

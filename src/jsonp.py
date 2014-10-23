@@ -1,4 +1,5 @@
 # http://flask.pocoo.org/snippets/79/
+
 from functools import wraps
 from flask import request, current_app
 

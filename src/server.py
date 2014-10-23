@@ -8,7 +8,7 @@ app = Flask(__name__)
 # TODO disable in prod
 app.debug = True
 
-@app.route('/carts/<cart_id>')
+@app.route('/api/v1/carts/<cart_id>')
 @jsonp
 def hello(cart_id):
     gsa_adv_u = request.args.get('u')

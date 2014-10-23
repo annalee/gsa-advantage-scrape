@@ -39,16 +39,19 @@ If you don't care to use it, then  simply execute:
 
 In the main effect.
 
-## Other Usage
+## Usage
 
-To make this useful, we support both a command-line usage and a CGI
-usage.
+To make this useful, we support command-line, CGI, and Flask usage.
+
+### Command-Line
 
 The command line usage is simple:
 
 ```
 python gsa-scrape-commandline.py
 ```
+
+### CGI
 
 However, we normally used this a web-service API, and therefore host
 it with Apache.  Although there are many ways to do this, I prefer to
@@ -91,7 +94,17 @@ above or have installed your python packages where they can be reached
 without VirtualEnv, you should access `gsa-adv-cart-ve.py` or
 `gsa-adv-cart.py`.
 
-#Note
+### Flask App
+
+To make the API available via a Flask app, run:
+
+```bash
+python src/server.py
+```
+
+then do requests to http://127.0.0.1:5000/carts/CART_ID?u=USER&p=PASSWORD. Note this endpoint supports JSONP via a `callback` parameter.
+
+### Note
 
 The scaper is best tested by either using Curl or by using the
 commandline program included.  If you know all of the necessary

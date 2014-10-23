@@ -42,10 +42,10 @@ python gsa-scrape-commandline.py
 However, we normally used this a web-service API, and therefore host
 it with Apache.  Although there are many ways to do this, I prefer to
 do it as a virtual host.  This requires two steps:  Adding an entry to
-/etc/hosts file and adding a VirtualHost entry to your apache
+`/etc/hosts` file and adding a VirtualHost entry to your apache
 configuration.
 
-This is the entry I add to /etc/hosts, which allow the url
+This is the entry I add to `/etc/hosts`, which allow the url
 http://gsa-advantage-scraper to be resolved to localhost.
 
 ```
